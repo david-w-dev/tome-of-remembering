@@ -23,6 +23,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+color = Color(0.5463032, 0.5463032, 0.5463032, 1)
 
 [node name="HeaderBar" parent="." unique_id=1942679663 instance=ExtResource("1_0wfyh")]
 layout_mode = 1
@@ -33,6 +34,7 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = 141.0
+offset_bottom = 101.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -42,9 +44,12 @@ layout_mode = 1
 
 [node name="ModeNotes" parent="ModeContainer" unique_id=880565363 instance=ExtResource("5_tipki")]
 layout_mode = 1
+offset_top = -26.0
+offset_bottom = -115.0
 
 [node name="ModeSettings" parent="ModeContainer" unique_id=1637054351 instance=ExtResource("6_85g3d")]
 visible = false
 layout_mode = 1
 
 [node name="PopModeSelector" parent="." unique_id=1687658138 instance=ExtResource("2_sugp2")]
+visible = false
