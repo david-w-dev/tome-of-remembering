@@ -1,6 +1,7 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+addons/
 
 # Godot export presets can contain sensitive paths/settings
 export_presets.cfg
