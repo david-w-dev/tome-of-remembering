@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://dxeskb0c85msl"]
+
+[ext_resource type="Script" uid="uid://c47vm10f638fp" path="res://scripts/header_bar.gd" id="1_p4c3d"]
+
+[node name="HeaderBar" type="Control" unique_id=1942679663]
+layout_mode = 3
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+script = ExtResource("1_p4c3d")
+
+[node name="Title" type="Label" parent="." unique_id=1351367147]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 21.0
+offset_bottom = 119.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "TITLE TEXT"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="btn_Menu" type="Button" parent="." unique_id=553290452]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -132.0
+offset_top = 26.0
+offset_right = -29.0
+offset_bottom = 115.0
+grow_horizontal = 0
+text = "Burger"
+
+[connection signal="pressed" from="btn_Menu" to="." method="_on_menu_button_pressed"]
