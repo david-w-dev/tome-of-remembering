@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://6iv7837fwq6"]
 
 [ext_resource type="Script" uid="uid://c5h26h4io1j7l" path="res://scripts/mode_notes.gd" id="1_s04st"]
+[ext_resource type="PackedScene" uid="uid://c5s0rj52ysmve" path="res://scenes/note_card.tscn" id="2_kxfe2"]
 
 [node name="ModeNotes" type="Control" unique_id=880565363]
 layout_mode = 3
@@ -10,6 +11,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_s04st")
+note_card_scene = ExtResource("2_kxfe2")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=529131110]
 layout_mode = 1
@@ -22,11 +24,21 @@ grow_vertical = 2
 [node name="NotesScroll" type="ScrollContainer" parent="VBoxContainer" unique_id=1913312688]
 layout_mode = 2
 size_flags_vertical = 3
+mouse_filter = 0
 
-[node name="NotesList" type="VBoxContainer" parent="VBoxContainer/NotesScroll" unique_id=536283811]
+[node name="NotesScrollContent" type="VBoxContainer" parent="VBoxContainer/NotesScroll" unique_id=859191203]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="NotesList" type="VBoxContainer" parent="VBoxContainer/NotesScroll/NotesScrollContent" unique_id=536283811]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="EmptyStateLabel" type="Label" parent="VBoxContainer/NotesScroll/NotesScrollContent" unique_id=908539970]
+layout_mode = 2
+text = "No notes. Add a note below."
 
 [node name="SaveButton" type="Button" parent="VBoxContainer" unique_id=916528254]
 layout_mode = 2
@@ -40,3 +52,5 @@ wrap_mode = 1
 
 [node name="KeyboardSpacer" type="Control" parent="VBoxContainer" unique_id=127023520]
 layout_mode = 2
+
+[node name="NotesContextMenu" type="PopupMenu" parent="." unique_id=1855592038]

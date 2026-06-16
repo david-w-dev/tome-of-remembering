@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://c5s0rj52ysmve"]
+
+[ext_resource type="Script" uid="uid://b1rsolhw7ncj1" path="res://scripts/note_card.gd" id="1_43uvi"]
+
+[node name="NoteCard" type="PanelContainer" unique_id=1040184798]
+mouse_filter = 1
+script = ExtResource("1_43uvi")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=748390365]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=395550144]
+layout_mode = 2
+
+[node name="Label_Timestamp" type="Label" parent="MarginContainer/VBoxContainer" unique_id=452984034]
+layout_mode = 2
+
+[node name="Label_NoteText" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1639882077]
+layout_mode = 2

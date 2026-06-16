@@ -1,14 +1,31 @@
 extends Control
 
+@export var note_card_scene: PackedScene
+
 @onready var note_input: TextEdit = $VBoxContainer/NoteInput
 @onready var save_button: Button = $VBoxContainer/SaveButton
-@onready var notes_list: VBoxContainer = $VBoxContainer/NotesScroll/NotesList
+@onready var notes_scroll: ScrollContainer = $VBoxContainer/NotesScroll
+@onready var notes_list: VBoxContainer = $VBoxContainer/NotesScroll/NotesScrollContent/NotesList
+@onready var empty_state_label: Label = $VBoxContainer/NotesScroll/NotesScrollContent/EmptyStateLabel
 @onready var keyboard_spacer: Control = $VBoxContainer/KeyboardSpacer
+@onready var notes_context_menu: PopupMenu = $NotesContextMenu
+
+var selected_note_id := ""
 
 
 func _ready() -> void:
 	save_button.pressed.connect(_on_save_button_pressed)
 	keyboard_spacer.custom_minimum_size.y = 0
+	
+	notes_scroll.mouse_filter = Control.MOUSE_FILTER_STOP
+	notes_list.mouse_filter = Control.MOUSE_FILTER_PASS
+	
+	notes_context_menu.clear()
+	notes_context_menu.add_item("Delete", 0)
+	notes_context_menu.id_pressed.connect(_on_notes_context_menu_id_pressed)
+	
+	NotesStore.load_notes()
+	rebuild_notes_list()
 
 
 func _process(_delta: float) -> void:
@@ -23,6 +40,18 @@ func update_keyboard_spacer() -> void:
 	else:
 		keyboard_spacer.custom_minimum_size.y = 0
 
+func update_empty_state() -> void:
+	var has_notes := NotesStore.get_all_notes().size() > 0
+	
+	notes_list.visible = has_notes
+	empty_state_label.visible = not has_notes
+
+func scroll_to_bottom_deferred() -> void:
+	await get_tree().process_frame
+	await get_tree().process_frame
+	
+	var vertical_scroll_bar := notes_scroll.get_v_scroll_bar()
+	notes_scroll.scroll_vertical = int(vertical_scroll_bar.max_value)
 
 func _on_save_button_pressed() -> void:
 	var note_text: String = note_input.text.strip_edges()
@@ -30,51 +59,64 @@ func _on_save_button_pressed() -> void:
 	if note_text == "":
 		return
 	
-	var timestamp: String = _get_timestamp()
-	add_note_to_list(note_text, timestamp)
+	var note_data: Dictionary = NotesStore.create_note(note_text)
+	
+	add_note_to_list(note_data)
+	update_empty_state()
+	scroll_to_bottom_deferred()
 	
 	note_input.clear()
 
-
-func add_note_to_list(note_text: String, timestamp: String) -> void:
-	var note_container := PanelContainer.new()
-	var note_margin := MarginContainer.new()
-	var note_vbox := VBoxContainer.new()
+func add_note_to_list(note_data: Dictionary) -> void:
+	var note_card := note_card_scene.instantiate()
 	
-	var timestamp_label := Label.new()
-	var note_label := Label.new()
+	notes_list.add_child(note_card)
 	
-	note_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	note_margin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	note_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	timestamp_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	note_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	
-	timestamp_label.text = timestamp
-	note_label.text = note_text
-	
-	note_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	
-	note_margin.add_theme_constant_override("margin_left", 12)
-	note_margin.add_theme_constant_override("margin_right", 12)
-	note_margin.add_theme_constant_override("margin_top", 8)
-	note_margin.add_theme_constant_override("margin_bottom", 8)
-	
-	note_vbox.add_child(timestamp_label)
-	note_vbox.add_child(note_label)
-	note_margin.add_child(note_vbox)
-	note_container.add_child(note_margin)
-	
-	notes_list.add_child(note_container)
+	note_card.setup(note_data)
+	note_card.note_pressed.connect(_on_note_pressed)
+	note_card.note_long_pressed.connect(_on_note_long_pressed)
 
 
-func _get_timestamp() -> String:
-	var datetime := Time.get_datetime_dict_from_system()
+func clear_notes_list() -> void:
+	for child in notes_list.get_children():
+		child.queue_free()
+
+
+func rebuild_notes_list() -> void:
+	clear_notes_list()
 	
-	var year: int = datetime["year"]
-	var month: int = datetime["month"]
-	var day: int = datetime["day"]
-	var hour: int = datetime["hour"]
-	var minute: int = datetime["minute"]
+	for note_data in NotesStore.get_all_notes():
+		add_note_to_list(note_data)
 	
-	return "%04d-%02d-%02d %02d:%02d" % [year, month, day, hour, minute]
+	update_empty_state()
+	scroll_to_bottom_deferred()
+
+func _on_note_pressed(note_id: String) -> void:
+	print("Note pressed: ", note_id)
+
+
+func _on_note_long_pressed(note_id: String) -> void:
+	selected_note_id = note_id
+	
+	var mouse_position := get_viewport().get_mouse_position()
+	notes_context_menu.position = mouse_position
+	notes_context_menu.popup()
+	
+	print("Note long pressed: ", note_id)
+
+
+func _on_notes_context_menu_id_pressed(id: int) -> void:
+	if id == 0:
+		delete_selected_note()
+
+
+func delete_selected_note() -> void:
+	if selected_note_id == "":
+		return
+	
+	var deleted: bool = NotesStore.delete_note(selected_note_id)
+	
+	if deleted:
+		rebuild_notes_list()
+	
+	selected_note_id = ""
