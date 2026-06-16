@@ -16,3 +16,6 @@
 	- JSON note saving.
 	- Notes save locally to JSON and are persistent if app is closed.
 	- Be careful to think about future proofing for added features like campaigns, SQLite databases, backlinks etc.
+- *Version 2 feedback.*
+	- Notes scroll not scrolling on device. 
+	- Android keyboard interaction like copy paste selection etc not available currently. 
