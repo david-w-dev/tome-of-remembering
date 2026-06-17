@@ -37,6 +37,10 @@ func load_notes() -> void:
 	repair_loaded_notes()
 	
 	print("Notes loaded: ", notes.size())
+	
+	if has_node("/root/ReferenceStore"):
+		if ReferenceStore.get_all_references().is_empty() and notes.size() > 0:
+			ReferenceStore.rebuild_references_from_notes()
 
 func get_all_references() -> Array[String]:
 	var all_references: Array[String] = []
@@ -61,6 +65,7 @@ func get_all_references() -> Array[String]:
 	
 	all_references.sort()
 	return all_references
+
 
 func save_notes() -> void:
 	print(ProjectSettings.globalize_path(NOTES_SAVE_PATH))
@@ -87,6 +92,18 @@ func get_all_notes() -> Array:
 	return notes
 
 
+func get_note_by_id(note_id: String) -> Dictionary:
+	for note_data in notes:
+		if note_data.get("id", "") == note_id:
+			return note_data
+	
+	return {}
+
+
+func has_note(note_id: String) -> bool:
+	return get_note_index_by_id(note_id) != -1
+
+
 func create_note(note_text: String) -> Dictionary:
 	var timestamp := get_timestamp()
 	
@@ -104,6 +121,9 @@ func create_note(note_text: String) -> Dictionary:
 	notes.append(note_data)
 	save_notes()
 	
+	if has_node("/root/ReferenceStore"):
+		ReferenceStore.add_note_to_references(note_data)
+	
 	return note_data
 
 
@@ -116,6 +136,9 @@ func delete_note(note_id: String) -> bool:
 	
 	notes.remove_at(note_index)
 	save_notes()
+	
+	if has_node("/root/ReferenceStore"):
+		ReferenceStore.remove_note_id_from_all_references(note_id)
 	
 	print("Deleted note: ", note_id)
 	return true
@@ -130,6 +153,27 @@ func get_note_index_by_id(note_id: String) -> int:
 	
 	return -1
 
+func normalize_reference_key(reference_name: String) -> String:
+	return reference_name.strip_edges().to_upper()
+
+
+func reference_key_to_display_name(reference_key: String) -> String:
+	var words := reference_key.strip_edges().to_lower().split(" ", false)
+	var display_words: Array[String] = []
+	
+	for word in words:
+		if word == "":
+			continue
+		
+		var first_letter := word.substr(0, 1).to_upper()
+		var remaining_letters := ""
+		
+		if word.length() > 1:
+			remaining_letters = word.substr(1)
+		
+		display_words.append(first_letter + remaining_letters)
+	
+	return " ".join(display_words)
 
 func extract_references(note_text: String) -> Array[String]:
 	var references: Array[String] = []
@@ -141,16 +185,16 @@ func extract_references(note_text: String) -> Array[String]:
 		return references
 	
 	for result in regex.search_all(note_text):
-		var reference_name := result.get_string(1).strip_edges()
+		var raw_reference_name := result.get_string(1)
+		var reference_key := normalize_reference_key(raw_reference_name)
 		
-		if reference_name == "":
+		if reference_key == "":
 			continue
 		
-		if not references.has(reference_name):
-			references.append(reference_name)
+		if not references.has(reference_key):
+			references.append(reference_key)
 	
 	return references
-
 
 func repair_loaded_notes() -> void:
 	var changed := false
@@ -158,16 +202,22 @@ func repair_loaded_notes() -> void:
 	for i in range(notes.size()):
 		var note_data: Dictionary = notes[i]
 		var note_text: String = note_data.get("text", "")
+		var repaired_references := extract_references(note_text)
 		
 		if not note_data.has("references"):
-			note_data["references"] = extract_references(note_text)
+			note_data["references"] = repaired_references
 			changed = true
+		else:
+			var current_references: Array = note_data.get("references", [])
+			
+			if current_references != repaired_references:
+				note_data["references"] = repaired_references
+				changed = true
 		
 		notes[i] = note_data
 	
 	if changed:
 		save_notes()
-
 
 func get_timestamp() -> String:
 	var datetime := Time.get_datetime_dict_from_system()

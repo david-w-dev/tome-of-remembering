@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://daanrrogiyrgt"]
 
 [ext_resource type="Script" uid="uid://d5l2dpny7tgl" path="res://scripts/glossary_entry_card.gd" id="1_tqgjt"]
+[ext_resource type="PackedScene" uid="uid://c5s0rj52ysmve" path="res://scenes/note_card.tscn" id="2_sx3wk"]
 
 [node name="GlossaryEntryCard" type="PanelContainer" unique_id=615077329]
 anchors_preset = 10
@@ -9,6 +10,7 @@ offset_bottom = 50.0
 grow_horizontal = 2
 size_flags_horizontal = 3
 script = ExtResource("1_tqgjt")
+note_card_scene = ExtResource("2_sx3wk")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=105293856]
 layout_mode = 2
@@ -31,6 +33,23 @@ horizontal_alignment = 2
 [node name="ExpandedContent" type="VBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=2146390834]
 layout_mode = 2
 
-[node name="Label_ComingSoon" type="Label" parent="MarginContainer/VBoxContainer/ExpandedContent" unique_id=1502543942]
+[node name="Label_MentionCount" type="Label" parent="MarginContainer/VBoxContainer/ExpandedContent" unique_id=1521946181]
 layout_mode = 2
-text = "Features coming soon..."
+
+[node name="Label_FirstTitle" type="Label" parent="MarginContainer/VBoxContainer/ExpandedContent" unique_id=2146106661]
+layout_mode = 2
+text = "First Mention:"
+
+[node name="FirstNoteContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ExpandedContent" unique_id=890403823]
+layout_mode = 2
+
+[node name="Label_LatestTitle" type="Label" parent="MarginContainer/VBoxContainer/ExpandedContent" unique_id=1025357160]
+layout_mode = 2
+text = "Latest Mention:"
+
+[node name="LatestNoteContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ExpandedContent" unique_id=2061703650]
+layout_mode = 2
+
+[node name="Button_ShowAll" type="Button" parent="MarginContainer/VBoxContainer/ExpandedContent" unique_id=101011246]
+layout_mode = 2
+text = "Show All"

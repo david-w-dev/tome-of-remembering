@@ -41,3 +41,27 @@
 	- Glossary references should be expandable and later contain more features.
 	- The reference itself should be the title on the left side with an arrow on the right side suggesting it is expandable.
 	- When expanded it should just say "Features coming soon..."
+	
+	Complete. Glossary mode using drop-downable cards for references.
+
+#Version 7:
+	- Glossary items are displayed as expandable cards.
+	- When collapsed, each card shows the reference title and maybe the number of matching notes.
+	- When expanded, each card shows:
+		- The first note that mentioned this reference.
+		- The latest note that mentioned this reference.
+		- A "Show all" button.
+	- Pressing "Show all" opens a popup panel.
+	- The popup panel contains a scrollable list of every note containing that reference.
+	- Existing note card scenes should be reused for the first note, latest note, and full note list wherever possible.
+
+	Complete. Drop down shows first and latest note, with show all button creating a popup that shows all referenced notes.
+
+#Version 8:
+	- [CAPITALIZE] all references stored in notes JSON then print them as "Proper Nouns" in note stack and glossary.
+	
+	Complete. At least typed note references are normalized by the time they get to the glossary.
+
+#Version 9:
+	- Android version has glossary popup on startup.
+	- Android version can't touch glossary entries.

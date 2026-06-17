@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bx4dwykqhdhgt" path="res://scripts/mode_glossary.gd" id="1_f6dj6"]
 [ext_resource type="PackedScene" uid="uid://daanrrogiyrgt" path="res://scenes/glossary_entry_card.tscn" id="2_d4mto"]
+[ext_resource type="PackedScene" uid="uid://c5s0rj52ysmve" path="res://scenes/note_card.tscn" id="3_307fl"]
 
 [node name="ModeGlossary" type="Control" unique_id=1196702142]
 layout_mode = 3
@@ -12,6 +13,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_f6dj6")
 glossary_entry_card_scene = ExtResource("2_d4mto")
+note_card_scene = ExtResource("3_307fl")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1560030374]
 layout_mode = 1
@@ -33,3 +35,37 @@ size_flags_vertical = 3
 [node name="EmptyStateLabel" type="Label" parent="VBoxContainer" unique_id=1877575115]
 layout_mode = 2
 text = "Glossary is empty. Add items using [square brackets] in your notes."
+
+[node name="AllMentionsPopup" type="PopupPanel" parent="." unique_id=851302921]
+transparent_bg = false
+oversampling_override = 1.0
+initial_position = 1
+transparent = false
+
+[node name="PopupPanelMargin" type="MarginContainer" parent="AllMentionsPopup" unique_id=564642711]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 96.0
+offset_bottom = 96.0
+
+[node name="PopupVBox" type="VBoxContainer" parent="AllMentionsPopup/PopupPanelMargin" unique_id=1232363125]
+layout_mode = 2
+
+[node name="HeaderRow" type="HBoxContainer" parent="AllMentionsPopup/PopupPanelMargin/PopupVBox" unique_id=1363776626]
+layout_mode = 2
+
+[node name="Label_PopupTitle" type="Label" parent="AllMentionsPopup/PopupPanelMargin/PopupVBox/HeaderRow" unique_id=1583432404]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button_ClosePopup" type="Button" parent="AllMentionsPopup/PopupPanelMargin/PopupVBox/HeaderRow" unique_id=403959617]
+layout_mode = 2
+text = "Close"
+
+[node name="PopupScroll" type="ScrollContainer" parent="AllMentionsPopup/PopupPanelMargin/PopupVBox" unique_id=1397603466]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PopupNotesList" type="VBoxContainer" parent="AllMentionsPopup/PopupPanelMargin/PopupVBox/PopupScroll" unique_id=723035500]
+layout_mode = 2
+size_flags_horizontal = 3
