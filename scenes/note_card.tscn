@@ -15,5 +15,8 @@ layout_mode = 2
 [node name="Label_Timestamp" type="Label" parent="MarginContainer/VBoxContainer" unique_id=452984034]
 layout_mode = 2
 
-[node name="Label_NoteText" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1639882077]
+[node name="Label_NoteText" type="RichTextLabel" parent="MarginContainer/VBoxContainer" unique_id=2004482080]
 layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false

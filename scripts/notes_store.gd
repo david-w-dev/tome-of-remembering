@@ -34,11 +34,36 @@ func load_notes() -> void:
 		return
 	
 	notes = parsed_data["notes"]
+	repair_loaded_notes()
 	
 	print("Notes loaded: ", notes.size())
 
+func get_all_references() -> Array[String]:
+	var all_references: Array[String] = []
+	var seen_reference_keys: Array[String] = []
+	
+	for note_data in notes:
+		var note_references: Array = note_data.get("references", [])
+		
+		for reference_name in note_references:
+			var display_name := str(reference_name).strip_edges()
+			
+			if display_name == "":
+				continue
+			
+			var reference_key := display_name.to_lower()
+			
+			if seen_reference_keys.has(reference_key):
+				continue
+			
+			seen_reference_keys.append(reference_key)
+			all_references.append(display_name)
+	
+	all_references.sort()
+	return all_references
 
 func save_notes() -> void:
+	print(ProjectSettings.globalize_path(NOTES_SAVE_PATH))
 	var save_data := {
 		"schema_version": 1,
 		"notes": notes
@@ -71,6 +96,7 @@ func create_note(note_text: String) -> Dictionary:
 		"text": note_text,
 		"created_at": timestamp,
 		"updated_at": timestamp,
+		"references": extract_references(note_text),
 		"links": [],
 		"tags": []
 	}
@@ -103,6 +129,44 @@ func get_note_index_by_id(note_id: String) -> int:
 			return i
 	
 	return -1
+
+
+func extract_references(note_text: String) -> Array[String]:
+	var references: Array[String] = []
+	var regex := RegEx.new()
+	var error := regex.compile("\\[([^\\]]+)\\]")
+	
+	if error != OK:
+		print("Reference regex failed to compile.")
+		return references
+	
+	for result in regex.search_all(note_text):
+		var reference_name := result.get_string(1).strip_edges()
+		
+		if reference_name == "":
+			continue
+		
+		if not references.has(reference_name):
+			references.append(reference_name)
+	
+	return references
+
+
+func repair_loaded_notes() -> void:
+	var changed := false
+	
+	for i in range(notes.size()):
+		var note_data: Dictionary = notes[i]
+		var note_text: String = note_data.get("text", "")
+		
+		if not note_data.has("references"):
+			note_data["references"] = extract_references(note_text)
+			changed = true
+		
+		notes[i] = note_data
+	
+	if changed:
+		save_notes()
 
 
 func get_timestamp() -> String:

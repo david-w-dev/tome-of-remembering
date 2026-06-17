@@ -4,7 +4,7 @@ signal note_pressed(note_id: String)
 signal note_long_pressed(note_id: String)
 
 @onready var timestamp_label: Label = $MarginContainer/VBoxContainer/Label_Timestamp
-@onready var note_text_label: Label = $MarginContainer/VBoxContainer/Label_NoteText
+@onready var note_text_label: RichTextLabel = $MarginContainer/VBoxContainer/Label_NoteText
 
 var note_data: Dictionary = {}
 
@@ -16,6 +16,7 @@ var has_moved_too_far := false
 
 const LONG_PRESS_TIME := 0.5
 const DRAG_CANCEL_DISTANCE := 20.0
+const REFERENCE_COLOR := "#8fd3ff"
 
 
 func _ready() -> void:
@@ -29,8 +30,37 @@ func setup(new_note_data: Dictionary) -> void:
 	note_data = new_note_data
 	
 	timestamp_label.text = note_data.get("created_at", "")
-	note_text_label.text = note_data.get("text", "")
+	
+	note_text_label.bbcode_enabled = true
+	note_text_label.fit_content = true
+	note_text_label.scroll_active = false
 	note_text_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	note_text_label.text = note_text_to_bbcode(note_data.get("text", ""))
+
+
+func note_text_to_bbcode(note_text: String) -> String:
+	var regex := RegEx.new()
+	var error := regex.compile("\\[([^\\]]+)\\]")
+	
+	if error != OK:
+		print("Reference regex failed to compile.")
+		return note_text
+	
+	var output := note_text
+	var matches := regex.search_all(note_text)
+	
+	for i in range(matches.size() - 1, -1, -1):
+		var result := matches[i]
+		var reference_name := result.get_string(1).strip_edges()
+		var replacement := "[color=" + REFERENCE_COLOR + "]" + escape_bbcode(reference_name) + "[/color]"
+		
+		output = output.substr(0, result.get_start()) + replacement + output.substr(result.get_end())
+	
+	return output
+
+
+func escape_bbcode(text: String) -> String:
+	return text.replace("[", "&#91;").replace("]", "&#93;")
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -57,6 +87,7 @@ func _gui_input(event: InputEvent) -> void:
 	elif event is InputEventMouseMotion:
 		if is_pressing:
 			_update_drag(event.position)
+
 
 func _process(delta: float) -> void:
 	if not is_pressing:

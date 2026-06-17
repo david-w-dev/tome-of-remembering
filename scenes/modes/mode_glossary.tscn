@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://buh88d4hnfybo"]
 
+[ext_resource type="Script" uid="uid://bx4dwykqhdhgt" path="res://scripts/mode_glossary.gd" id="1_f6dj6"]
+
 [node name="ModeGlossary" type="Control" unique_id=1196702142]
 layout_mode = 3
 anchors_preset = 15
@@ -7,15 +9,25 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_f6dj6")
 
-[node name="Label" type="Label" parent="." unique_id=1667360355]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1560030374]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-text = "Glossary"
-horizontal_alignment = 1
-vertical_alignment = 1
+
+[node name="GlossaryScroll" type="ScrollContainer" parent="VBoxContainer" unique_id=1824774567]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="GlossaryList" type="VBoxContainer" parent="VBoxContainer/GlossaryScroll" unique_id=51649796]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="EmptyStateLabel" type="Label" parent="VBoxContainer" unique_id=1877575115]
+layout_mode = 2
+text = "Glossary is empty. Add items using [square brackets] in your notes."

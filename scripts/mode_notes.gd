@@ -27,9 +27,16 @@ func _ready() -> void:
 	NotesStore.load_notes()
 	rebuild_notes_list()
 
-
 func _process(_delta: float) -> void:
+	if not should_use_virtual_keyboard_spacer():
+		keyboard_spacer.custom_minimum_size.y = 0
+		return
+	
 	update_keyboard_spacer()
+
+
+func should_use_virtual_keyboard_spacer() -> bool:
+	return OS.has_feature("android") or OS.has_feature("ios")
 
 
 func update_keyboard_spacer() -> void:
@@ -39,6 +46,7 @@ func update_keyboard_spacer() -> void:
 		keyboard_spacer.custom_minimum_size.y = (keyboard_height * 0.5) + 200
 	else:
 		keyboard_spacer.custom_minimum_size.y = 0
+
 
 func update_empty_state() -> void:
 	var has_notes := NotesStore.get_all_notes().size() > 0
