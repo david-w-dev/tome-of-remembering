@@ -3,6 +3,7 @@ extends Control
 @onready var glossary_list: VBoxContainer = $VBoxContainer/GlossaryScroll/GlossaryList
 @onready var empty_state_label: Label = $VBoxContainer/EmptyStateLabel
 
+@export var glossary_entry_card_scene: PackedScene
 
 func _ready() -> void:
 	refresh_glossary()
@@ -36,9 +37,6 @@ func clear_glossary_list() -> void:
 
 
 func add_reference_to_list(reference_name: String) -> void:
-	var label := Label.new()
-	label.text = reference_name
-	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	
-	glossary_list.add_child(label)
+	var glossary_card := glossary_entry_card_scene.instantiate()
+	glossary_list.add_child(glossary_card)
+	glossary_card.setup(reference_name)

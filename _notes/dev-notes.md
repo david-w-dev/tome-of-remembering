@@ -33,3 +33,11 @@
 	- Decide on a syntax for backlinks. (Can we manipulate android keyboard to show specific utility keys?)
 	- Show backlinks in notes stack as highlighted normal text.
 	- Glossary mode shows a "set" of all backlinks.
+	
+	Complete. Backlinks created with [square brackets] now show in notes stack as highlighted text and as a list in glossary mode.
+
+#Version 6:
+	- Improved glossary items display. Use item cards similar to what we do with notes. 
+	- Glossary references should be expandable and later contain more features.
+	- The reference itself should be the title on the left side with an arrow on the right side suggesting it is expandable.
+	- When expanded it should just say "Features coming soon..."

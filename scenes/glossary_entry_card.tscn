@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://daanrrogiyrgt"]
+
+[ext_resource type="Script" uid="uid://d5l2dpny7tgl" path="res://scripts/glossary_entry_card.gd" id="1_tqgjt"]
+
+[node name="GlossaryEntryCard" type="PanelContainer" unique_id=615077329]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 50.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+script = ExtResource("1_tqgjt")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=105293856]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=156324384]
+layout_mode = 2
+
+[node name="HeaderRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=735924626]
+layout_mode = 2
+
+[node name="Label_ReferenceName" type="Label" parent="MarginContainer/VBoxContainer/HeaderRow" unique_id=1187879400]
+layout_mode = 2
+
+[node name="Label_Arrow" type="Label" parent="MarginContainer/VBoxContainer/HeaderRow" unique_id=343791654]
+layout_mode = 2
+size_flags_horizontal = 8
+text = ">"
+horizontal_alignment = 2
+
+[node name="ExpandedContent" type="VBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=2146390834]
+layout_mode = 2
+
+[node name="Label_ComingSoon" type="Label" parent="MarginContainer/VBoxContainer/ExpandedContent" unique_id=1502543942]
+layout_mode = 2
+text = "Features coming soon..."
