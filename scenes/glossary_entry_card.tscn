@@ -20,6 +20,7 @@ layout_mode = 2
 
 [node name="HeaderRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=735924626]
 layout_mode = 2
+mouse_filter = 0
 
 [node name="Label_ReferenceName" type="Label" parent="MarginContainer/VBoxContainer/HeaderRow" unique_id=1187879400]
 layout_mode = 2

@@ -65,3 +65,5 @@
 #Version 9:
 	- Android version has glossary popup on startup.
 	- Android version can't touch glossary entries.
+	
+	Complete. Android now matches desktop preview in function.

@@ -12,6 +12,7 @@ signal show_all_requested(reference_name: String, note_ids: Array)
 @onready var latest_title_label: Label = $MarginContainer/VBoxContainer/ExpandedContent/Label_LatestTitle
 @onready var latest_note_container: VBoxContainer = $MarginContainer/VBoxContainer/ExpandedContent/LatestNoteContainer
 @onready var show_all_button: Button = $MarginContainer/VBoxContainer/ExpandedContent/Button_ShowAll
+@onready var header_row: HBoxContainer = $MarginContainer/VBoxContainer/HeaderRow
 
 @export var note_card_scene: PackedScene
 
@@ -23,14 +24,20 @@ var is_expanded := false
 
 
 func _ready() -> void:
-	mouse_filter = Control.MOUSE_FILTER_STOP
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	
+	header_row.mouse_filter = Control.MOUSE_FILTER_STOP
+	reference_name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	arrow_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	
 	expanded_content.visible = false
+	
+	header_row.gui_input.connect(_on_header_row_gui_input)
 	
 	show_all_button.pressed.connect(_on_show_all_pressed)
 	show_all_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	
 	_update_arrow()
-
 
 func setup(new_reference_data: Dictionary) -> void:
 	reference_data = new_reference_data
@@ -49,7 +56,7 @@ func setup(new_reference_data: Dictionary) -> void:
 	_refresh_expanded_content()
 
 
-func _gui_input(event: InputEvent) -> void:
+func _on_header_row_gui_input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch:
 		if event.pressed:
 			toggle_expanded()
@@ -57,7 +64,6 @@ func _gui_input(event: InputEvent) -> void:
 	elif event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			toggle_expanded()
-
 
 func toggle_expanded() -> void:
 	is_expanded = not is_expanded
